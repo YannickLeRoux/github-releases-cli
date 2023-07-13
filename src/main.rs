@@ -6,6 +6,7 @@ const PERSONAL_ACCESS_TOKEN: &str = "your_token_here";
 
 #[derive(Deserialize)]
 struct Release {
+    name: Option<String>,
     published_at: Option<String>,
 }
 
@@ -80,7 +81,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let repo_releases: Vec<Release> = serde_json::from_str(&json_response)?;
 
             if let Some(last_release) = repo_releases.first() {
-                releases.push((name, last_release.published_at.clone()));
+                releases.push((
+                    name,
+                    last_release.name.clone(),
+                    last_release.published_at.clone(),
+                ));
             }
         } else {
             println!("Skipping repository with no name");
@@ -95,9 +100,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("********************************************");
     println!("\n");
 
-    for (name, published_at) in releases {
+    for (name, release_name, published_at) in releases {
         if let Some(release_date) = published_at {
-            println!("{:<60} \t {}", name, release_date);
+            println!(
+                "{:<60} \t {:<30} \t{}",
+                name,
+                release_date,
+                release_name.unwrap_or("No release name".to_string()),
+            );
         }
     }
 
