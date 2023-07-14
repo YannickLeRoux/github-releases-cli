@@ -24,4 +24,4 @@ If your organization's repositories are private, you need to provide authenticat
 2. Select "Developer Settings" from the sidebar.
 3. Click on "Personal access tokens".
 4. Generate a new token with the necessary permissions (here, `repo`s and `read:org`).
-5. Set the generated token as the value for the `PERSONAL_ACCESS_TOKEN` constant in the `main.rs` file.
+5. Store the generated token in a `.env` file in the root folder as `PERSONAL_ACCESS_TOKEN=your_personal_access_token`.

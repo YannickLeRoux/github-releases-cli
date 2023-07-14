@@ -1,8 +1,9 @@
+use dotenvy_macro::dotenv;
 use reqwest::header;
 use serde::Deserialize;
 
 const ORGANIZATION: &str = "edf-re";
-const PERSONAL_ACCESS_TOKEN: &str = "your_token_here";
+const PERSONAL_ACCESS_TOKEN: &str = dotenv!("PERSONAL_ACCESS_TOKEN");
 
 #[derive(Deserialize)]
 struct Release {
