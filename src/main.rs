@@ -5,13 +5,13 @@ use serde::Deserialize;
 const ORGANIZATION: &str = "edf-re";
 const PERSONAL_ACCESS_TOKEN: &str = dotenv!("PERSONAL_ACCESS_TOKEN");
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 struct Release {
     name: Option<String>,
     published_at: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 struct Repository {
     name: Option<String>,
 }
@@ -73,9 +73,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let response = client.get(&releases_url).send().await?;
 
             if !response.status().is_success() {
-                return Err(
-                    format!("Request failed with status code: {}", response.status()).into(),
+                println!(
+                    "Failed failing fetching releases for {} with error code {}",
+                    name,
+                    response.status()
                 );
+                continue;
             }
 
             let json_response = response.text().await?;
@@ -93,7 +96,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    releases.sort_by(|a, b| b.1.cmp(&a.1));
+    releases.sort_by(|a, b| b.2.cmp(&a.2));
 
     println!("\n");
     println!("********************************************");
